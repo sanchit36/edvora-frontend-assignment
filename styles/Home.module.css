@@ -75,3 +75,13 @@
   background-color: #fff;
   margin: 5px 0 15px 0;
 }
+
+.filterWrapper p {
+  color: #fff;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.msg {
+  color: #fff;
+}
