@@ -7,6 +7,7 @@
   padding: 1.2rem 1.5rem;
   display: flex;
   box-shadow: 3px 2px 3px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease-in;
 }
 
 .imageContainer {
@@ -17,6 +18,10 @@
   border-radius: 5px;
   overflow: hidden;
   transition: all 0.3s ease-in;
+}
+
+.cardContainer:hover {
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.35);
 }
 
 .cardContainer:hover .imageContainer {
@@ -81,7 +86,7 @@
 
   .infoContainer {
     align-self: center;
-    margin: 10px 0;
+    margin: 20px 0;
     flex: 1;
   }
 

@@ -24,6 +24,18 @@ export const getNearestSortedArray = (data, val) => {
   return newData;
 };
 
+export const getCities = (data) => {
+  const cities = [...new Set(data.map((item) => item.city))];
+  cities.sort();
+  return cities;
+};
+
+export const getStates = (data) => {
+  const state = [...new Set(data.map((item) => item.state))];
+  state.sort();
+  return state;
+};
+
 /*
 api url: https://assessment.api.vweb.app/rides
 

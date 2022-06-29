@@ -1,15 +1,32 @@
 import { useEffect, useState } from 'react';
 import Card from '../components/Card';
+import Select from '../components/Select';
 import Main from '../layout/Main';
 import styles from '../styles/Home.module.css';
-import { getNearestSortedArray } from '../utils';
+import { getCities, getNearestSortedArray, getStates } from '../utils';
 
 export default function Home({ data, user }) {
   const [activeTab, setActiveTab] = useState(0);
   const [sortedData, newSortedData] = useState([]);
+  const [upComingRides, setUpComingRides] = useState([]);
+  const [pastRides, setPastRides] = useState([]);
+  const [allStates, setAllStates] = useState([]);
+  const [allCities, setAllCities] = useState([]);
+
   const { station_code } = user;
+
   useEffect(() => {
-    newSortedData(getNearestSortedArray(data, station_code));
+    setAllCities(getCities(data));
+    setAllStates(getStates(data));
+  }, [data]);
+
+  useEffect(() => {
+    const sortedData = getNearestSortedArray(data, station_code);
+    newSortedData(sortedData);
+    setUpComingRides(
+      sortedData.filter((item) => new Date(item.date) >= new Date())
+    );
+    setPastRides(sortedData.filter((item) => new Date(item.date) < new Date()));
   }, [data, station_code]);
 
   const handleTabClick = (val) => {
@@ -30,13 +47,13 @@ export default function Home({ data, user }) {
             className={`${styles.tab} ${activeTab === 1 ? styles.active : ''}`}
             onClick={() => handleTabClick(1)}
           >
-            Upcoming rides
+            Upcoming rides ({upComingRides.length})
           </div>
           <div
             className={`${styles.tab} ${activeTab === 2 ? styles.active : ''}`}
             onClick={() => handleTabClick(2)}
           >
-            Past rides
+            Past rides ({pastRides.length})
           </div>
         </div>
         <div className={styles.filterContainer}>
@@ -51,13 +68,21 @@ export default function Home({ data, user }) {
               return <Card key={item.id} item={item} />;
             });
           case 1:
-            return sortedData.map((item) => {
-              return <Card key={item.id} item={item} />;
-            });
+            return upComingRides.length > 0 ? (
+              upComingRides.map((item) => {
+                return <Card key={item.id} item={item} />;
+              })
+            ) : (
+              <h3>No Upcoming Rides :(</h3>
+            );
           case 2:
-            return sortedData.map((item) => {
-              return <Card key={item.id} item={item} />;
-            });
+            return pastRides.length > 0 ? (
+              pastRides.map((item) => {
+                return <Card key={item.id} item={item} />;
+              })
+            ) : (
+              <h3>No Past Rides :(</h3>
+            );
         }
       })()}
     </Main>
