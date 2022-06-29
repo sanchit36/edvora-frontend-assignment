@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import Card from '../components/Card';
-import Select from '../components/Select';
+// import Select from '../components/Select';
 import Main from '../layout/Main';
 import styles from '../styles/Home.module.css';
 import { getCities, getNearestSortedArray, getStates } from '../utils';
+import Select from 'react-select';
 
 export default function Home({ data, user }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -12,12 +13,15 @@ export default function Home({ data, user }) {
   const [pastRides, setPastRides] = useState([]);
   const [allStates, setAllStates] = useState([]);
   const [allCities, setAllCities] = useState([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { station_code } = user;
 
   useEffect(() => {
-    setAllCities(getCities(data));
-    setAllStates(getStates(data));
+    setAllCities(getCities(data).map((city) => ({ value: city, label: city })));
+    setAllStates(
+      getStates(data).map((state) => ({ value: state, label: state }))
+    );
   }, [data]);
 
   useEffect(() => {
@@ -31,6 +35,10 @@ export default function Home({ data, user }) {
 
   const handleTabClick = (val) => {
     setActiveTab(val);
+  };
+
+  const toggleFilter = () => {
+    setIsFilterOpen((prev) => !prev);
   };
 
   return (
@@ -57,7 +65,37 @@ export default function Home({ data, user }) {
           </div>
         </div>
         <div className={styles.filterContainer}>
-          <div className={styles.filter}>Filters</div>
+          <div className={styles.filter} onClick={toggleFilter}>
+            Filters
+          </div>
+
+          <div
+            className={`${styles.filterWrapper} ${
+              isFilterOpen ? styles.activeFilter : ''
+            }`}
+          >
+            <h4>Filters</h4>
+            <span></span>
+            <Select
+              name='State'
+              onChange={(val) => {
+                console.log(val);
+              }}
+              options={allStates}
+              isClearable
+              isSearchable
+            />
+            <br />
+            <Select
+              name='City'
+              onChange={(val) => {
+                console.log(val);
+              }}
+              options={allCities}
+              isClearable
+              isSearchable
+            />
+          </div>
         </div>
       </div>
 
